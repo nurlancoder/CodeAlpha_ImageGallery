@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Image Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .close, .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 50%;
+        }
+
+        .close {
+            top: 20px;
+            right: 20px;
+            font-size: 25px;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            .lightbox img {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image Gallery</h1>
+    <div class="gallery">
+        <img src="/foto1.png" alt="Image 1">
+        <img src="/foto2.png" alt="Image 2">
+        <img src="/foto3.png" alt="Image 3">
+        <img src="/foto4.png" alt="Image 4">
+        <img src="/foto5.png" alt="Image 5">
+        <img src="/foto6.png" alt="Image 6">
+        <img src="/foto7.png" alt="Image 7">
+        <img src="/foto8.png" alt="Image 8">
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox">
+        <button class="close">&times;</button>
+        <button class="prev">&#10094;</button>
+        <img src="" alt="Large View">
+        <button class="next">&#10095;</button>
+    </div>
+
+    <script>
+        const galleryImages = document.querySelectorAll('.gallery img');
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImg = document.querySelector('.lightbox img');
+        const closeBtn = document.querySelector('.close');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+
+        let currentIndex = 0;
+
+        function showLightbox(index) {
+            currentIndex = index;
+            lightboxImg.src = galleryImages[index].src;
+            lightbox.classList.add('active');
+        }
+
+        galleryImages.forEach((img, index) => {
+            img.addEventListener('click', () => showLightbox(index));
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : galleryImages.length - 1;
+            lightboxImg.src = galleryImages[currentIndex].src;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex < galleryImages.length - 1) ? currentIndex + 1 : 0;
+            lightboxImg.src = galleryImages[currentIndex].src;
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                lightbox.classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>
